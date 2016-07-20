@@ -1,0 +1,17 @@
+{
+  "name": "api",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "^1.15.1",
+    "cookie-parser": "^1.4.2",
+    "express": "^4.13.4",
+    "express-cors": "0.0.3",
+    "jsonwebtoken": "^6.2.0",
+    "knex": "^0.11.3",
+    "morgan": "^1.7.0",
+    "mysql": "^2.10.2",
+    "path": "^0.12.7",
+    "redis": "^2.6.0-2",
+    "serve-favicon": "^2.3.0"
+  }
+}
