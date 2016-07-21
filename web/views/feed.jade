@@ -22,9 +22,7 @@ html
         div.filter-hide-block HIDE
         div.filter-expire-block EXPIRE
       div.paging-section
-        div#page-block #{page}
         div#pagesize-block #{pagesize}
-        div.page-text-block #{startNum}, #{endNum}, #{page}, #{pagesize}
         div.page-text-block 第 #{startNum}-#{endNum} 列 (共有 #{hit} 列)
         if startNum==1
           div.prepge#prepge <

@@ -41,7 +41,7 @@ router.get('/index.js', function(req, res){
   res.sendFile(path.join(__dirname+'/public/js/index.js'));
 });
 
-router.get('/feed_category.js', function(req, res){
+router.get('/feed/category.js', function(req, res){
   res.sendFile(path.join(__dirname+'/public/js/feed/category.js'));
 });
 

@@ -213,4 +213,163 @@ apiRoutes.put('/feed/announce', function(req, res){
   res.end();
 });
 
+apiRoutes.get('/feed/provider', function(req, res){
+  console.info('/feed/provider');
+
+  knexData.select('fs.ID as id', 'fs.Url as url', 'fs.Name as name', 'fs.Loc as loc', 'fs.Lang as lang',
+        'fs.Status_ID as status', 'fs.Duration as ttl', 'fs.Auto_Announce as autoAnnounce')
+  .from('feed_seed as fs')
+  .where('Status_ID', 1)
+  .then(function(result){
+    res.send({"time": new Date(), "cntr":result.length, "hit":result.length , "data": result});
+  }).catch(function(err){
+    console.info(err.code);
+  });
+  // res.send();
+});
+
+apiRoutes.get('/feed/category', function(req, res){
+  console.info('/feed/category');
+  var pagesize = (req.query.ps)?req.query.ps:10;
+  var page = (req.query.p)?req.query.p:1;
+  var qs = (req.query.qs)?req.query.qs:'';
+  var qloc = (req.query.qloc)?req.query.qloc:'';
+  var qk = (req.query.qk)?req.query.qk:'';
+
+  knexData.select('fc.ID as id', 'fc.MType as mType', 'fc.Last_Update_Time as lastUpdateTime',
+  'fc.Editor as editor', 'fc.Country as loc', 'fc.Status_ID as status',
+  'fce1.Value as displayValue', 'fce1.Lang as displayValueLang',
+  'fce2.Value as searchValue', 'fce2.Lang as searchValueLang', 'fc.Sort as sort')
+  .from('feed_category as fc')
+  .join('feed_category_expression as fce1', function(){
+    this.on(function(){
+      this.on('fce1.ID', 'fc.ID');
+      this.andOn('fce1.Type', 1)
+    })
+  })
+  .join('feed_category_expression as fce2', function(){
+    this.on(function(){
+      this.on('fce2.ID', 'fc.ID');
+      this.andOn('fce2.Type', 2);
+      this.andOn('fce2.Lang', 'fce1.Lang');
+    })
+  })
+  .where(function(){
+    if (qs) {
+      this.where('fc.Status_ID', qs);
+    } else {
+      this.where('fc.Status_ID', '>', -1);
+    }
+  })
+  .where(function(){
+    if (qloc) {
+      this.where('fc.Country', qloc);
+    }
+  })
+  .orderBy('fc.Sort')
+  .then(function(result){
+    var resMap = {};
+    result.forEach(function(entry){
+      if (resMap[entry.id]) {
+        var data = {
+          "id": entry.id,
+          "mType": entry.mType,
+          "loc": entry.loc,
+          "status": entry.status,
+          "editor": entry.editor,
+          "lastUpdateTime": entry.lastUpdateTime,
+          "displayValue": entry.displayValue,
+          "displayValueLang": entry.displayValueLang,
+          "searchValue": entry.searchValue,
+          "searchValueLang": entry.searchValueLang,
+          "sort": entry.sort
+        };
+        resMap[entry.id].push(data);
+      } else {
+        resMap[entry.id] = [];
+        var data = {
+          "id": entry.id,
+          "mType": entry.mType,
+          "loc": entry.loc,
+          "status": entry.status,
+          "editor": entry.editor,
+          "lastUpdateTime": entry.lastUpdateTime,
+          "displayValue": entry.displayValue,
+          "displayValueLang": entry.displayValueLang,
+          "searchValue": entry.searchValue,
+          "searchValueLang": entry.searchValueLang,
+          "sort": entry.sort
+        };
+        resMap[entry.id].push(data);
+      }
+    });
+
+    // console.info(resMap);
+
+    var resList = Object.keys(resMap).map(function(key){
+      var item = {};
+      resMap[key].forEach(function(entry){
+        if (item.id) {
+        } else {
+          item.id = entry.id;
+        }
+
+        if (item.status) {
+        } else {
+          item.status = entry.status;
+        }
+
+        if (item.mType) {
+        } else {
+          item.mType = entry.mType;
+        }
+
+        if (item.loc) {
+        } else {
+          item.loc = entry.loc;
+        }
+
+        if (item.editor) {
+        } else {
+          item.editor = entry.editor;
+        }
+
+        if (item.lastUpdateTime) {
+        } else {
+          item.lastUpdateTime = entry.lastUpdateTime;
+        }
+
+        if (item.displayValue) {
+        } else {
+          item.displayValue = {};
+        }
+
+        if (item.searchValue) {
+        } else {
+          item.searchValue = {};
+        }
+
+        if (item.sort) {
+        } else {
+          item.sort = entry.sort;
+        }
+
+        item.displayValue[entry.displayValueLang] = entry.displayValue;
+        item.searchValue[entry.searchValueLang] = entry.searchValue;
+      });
+      return item;
+    });
+
+    resList.sort(function(a,b) {return (a.sort > b.sort) ? 1 : ((b.sort > a.sort) ? -1 : 0);})
+
+    if ((resList.length-((page-1)*pagesize))>pagesize) {
+      res.send({"time":new Date(), "cntr":pagesize, "hit":resList.length, "data":resList.slice((page-1)*pagesize, ((page-1)*pagesize)+parseInt(pagesize))});
+    } else {
+      res.send({"time":new Date(), "cntr":resList.length-((page-1)*pagesize), "hit":resList.length, "data":resList.slice((page-1)*pagesize)});
+    }
+  });
+
+
+});
+
 module.exports = apiRoutes;

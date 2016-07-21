@@ -5,10 +5,76 @@ html
     meta(content='charset=utf-8')
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js')
     script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery.colorbox/1.6.4/jquery.colorbox-min.js')
     script(src='/js/common.js')
     script(src='/js/feed/provider.js')
+
     link(href='/css/header.css', rel='stylesheet')
+    link(href='/css/feed/provider.css', rel='stylesheet')
+    link(href='/css/onoffswitch.css', rel='stylesheet')
+    link(href='/css/colorbox.css', rel='stylesheet')
   body
     div.header
       include ../header.jade
     div.container
+      div.filter-section
+        div.filter-country-subsection Country
+          include ../component/select-loc.jade
+        div.filter-lang-subsection Language
+          include ../component/select-lang.jade
+        div.filter-keyword-subsection Keyword
+          input(type="search")
+        button#btn-search Search
+      div.function-section
+        button#btn-sandbox Add Provider Sandbox
+      div.paging-section
+      div.result-section
+        div.title-subsection
+          div.status-title-block Status
+          div.url-title-block URL
+          div.name-title-block Name
+          div.loc-title-block Country
+          div.lang-title-block Language
+          div.ttl-title-block TTL
+          div.autoAnnounce-title-block AutoAnnounce
+          div.control-title-block Control
+        div.cell-subsection
+          each item in data
+            div.cell(id='#{item.id}')
+              div.status-block
+                if item.status==1
+                  div.onoffswitch
+                    input.onoffswitch-checkbox(type='checkbox' name='onoffswitch' id='#{item.ID}-onoffswitch' fid='#{item.ID}' checked)
+                    label.onoffswitch-label(for='#{item.ID}-onoffswitch')
+                      span.onoffswitch-inner
+                      span.onoffswitch-switch
+                else if item.status==0
+                  div.onoffswitch
+                    input.onoffswitch-checkbox(type='checkbox' name='onoffswitch' id='#{item.ID}-onoffswitch' fid='#{item.ID}')
+                    label.onoffswitch-label(for='#{item.ID}-onoffswitch')
+                      span.onoffswitch-inner
+                      span.onoffswitch-switch #{item.status}
+              div.url-block #{item.url}
+              div.url-edit-block
+                input(type='text')
+              div.name-block #{item.name}
+              div.name-edit-block
+                input(type='text')
+              div.loc-block #{item.loc}
+              div.loc-edit-block
+                include ../component/select-loc.jade
+              div.lang-block #{item.lang}
+              div.lang-edit-block
+                include ../component/select-lang.jade
+              div.ttl-block #{item.ttl}
+              div.ttl-edit-block
+                input(type='number' min=0 max=90)
+              div.autoAnnounce-block #{item.autoAnnounce}
+              div.autoAnnounce-edit-block
+                include ../component/select-01.jade
+              div.control-block
+                a.editLink(href='#') Edit
+              div.control-edit-block
+                  a.saveLink(href='#') Save
+                  br
+                  a.cancelLink(href='#') Cancel

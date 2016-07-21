@@ -138,13 +138,52 @@ webRoutes.get('/feed', function(req, res){
 // Link to '${endpoint}/web/firstLogin
 webRoutes.get('/feed/category', function(req, res){
   console.info('feed category page');
-  res.render('feed/category');
+
+  var pagesize = (req.query.ps)?req.query.ps:10;
+  var page = (req.query.p)?req.query.p:1;
+  var qs = (req.query.qs)?req.query.qs:'';
+  var qloc = (req.query.qloc)?req.query.qloc:'';
+  var qk = (req.query.qk)?req.query.qk:'';
+
+  var url_opt = '?p='+page+'&ps='+pagesize+'&qs='+qs+'&qloc='+qloc+'&qk='+qk;
+  console.info(url_opt);
+  var options = {
+    url: 'http://localhost:3002/api/feed/category'+url_opt,
+    headers: {
+      'x-access-token': req.cookies.zmgrToken
+    }
+  };
+
+  request(options, function(error, response, body){
+    if (!error && response.statusCode == 200) {
+      console.info(body);
+      body = JSON.parse(body);
+      res.render('feed/category', body);
+    }
+  });
+
 });
 
 // Link to '${endpoint}/web/firstLogin
 webRoutes.get('/feed/provider', function(req, res){
   console.info('feed provider page');
-  res.render('feed/provider');
+
+  var options = {
+    url: 'http://localhost:3002/api/feed/provider',
+    headers: {
+      'x-access-token': req.cookies.zmgrToken
+    }
+  };
+
+  request(options, function(error, response, body){
+    if (!error && response.statusCode == 200) {
+      console.info(body);
+      body = JSON.parse(body);
+      res.render('feed/provider', body);
+    }
+  });
+
+
 });
 
 // Link to '${endpoint}/web/firstLogin

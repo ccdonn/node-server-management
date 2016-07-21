@@ -7,8 +7,39 @@ html
     script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js')
     script(src='/js/common.js')
     script(src='/js/feed/category.js')
+
     link(href='/css/header.css', rel='stylesheet')
+    link(href='/css/feed/category.css', rel='stylesheet')
+    link(href='/css/onoffswitch.css', rel='stylesheet')
+
   body
     div.header
       include ../header.jade
     div.container
+      div.filter-section
+        div.filter-country-subsection Country:
+          include ../component/select-loc.jade
+        div.filter-mtype-subsection MType:
+          include ../component/select-mtype.jade
+        div.filter-keyword-subsection Keyword:
+          input(type='search')
+        button#btn-search Search
+      div.function-section
+        button#btn-sortmode Sorting Mode
+        button#btn-sortmode-ok OK/Submit
+        button#btn-sortmode-cancel Cancel
+      div.paging-section
+      div.result-section
+        div.title-subsection
+          div.status-title-block Status
+          div.sort-title-block Order
+          div.id-title-block ID
+          div.country-title-block country
+          div.mtype-title-block MType
+          div.display-title-block DisplayWord
+          div.search-title-block SearchWord
+          div.lastUpdateTime-title-block Timestamp
+          div.editor-title-block Editor
+          dir.control-title-block Control
+        div.cell-subsection
+      div.result-sortingmode-section

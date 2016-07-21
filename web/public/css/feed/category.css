@@ -1,0 +1,189 @@
+/* filter */
+.filter-section {
+  border-style: groove;
+  margin: 10px;
+}
+.function-section {
+  border-style: groove;
+  margin: 10px;
+}
+.paging-section {
+  border-style: groove;
+  margin: 10px;
+}
+.result-section {
+  border-style: groove;
+  margin: 10px;
+}
+.result-sortingmode-section{
+  border-style: groove;
+  margin: 10px;
+}
+
+/* title */
+.status-title-block {
+  width: 100px;
+  display: inline-block;
+}
+
+.country-title-block {
+  width: 100px;
+  display: inline-block;
+}
+
+.id-title-block {
+  width: 100px;
+  display: inline-block;
+}
+
+.mtype-title-block {
+  width: 100px;
+  display: inline-block;
+}
+
+.lastUpdateTime-title-block {
+  width: 100px;
+  display: inline-block;
+}
+
+.editor-title-block {
+  width: 100px;
+  display: inline-block;
+}
+
+.control-title-block {
+  width: 100px;
+  display: inline-block;
+}
+
+.display-title-block {
+  width: 150px;
+  display: inline-block;
+}
+
+.search-title-block {
+  width: 150px;
+  display: inline-block;
+}
+
+.sort-title-block{
+  width: 100px;
+  display: inline-block;
+}
+
+/* display */
+.status-block {
+  width: 100px;
+  display: inline-block;
+}
+
+.country-block {
+  width: 100px;
+  display: inline-block;
+}
+
+.id-block {
+  width: 100px;
+  display: inline-block;
+}
+
+.mtype-block {
+  width: 100px;
+  display: inline-block;
+}
+
+.lastUpdateTime-block {
+  width: 100px;
+  display: inline-block;
+}
+
+.editor-block {
+  width: 100px;
+  display: inline-block;
+}
+
+.control-block {
+  width: 100px;
+  display: inline-block;
+}
+
+.display-block {
+  width: 150px;
+  display: inline-block;
+}
+
+.search-block {
+  width: 150px;
+  display: inline-block;
+}
+
+.sort-block {
+  width: 100px;
+  display: inline-block;
+}
+
+/* edit */
+.status-edit-block {
+  width: 100px;
+  display: none;
+}
+
+.country-edit-block {
+  width: 100px;
+  display: none;
+}
+
+.id-edit-block {
+  width: 100px;
+  display: none;
+}
+
+.mtype-edit-block {
+  width: 100px;
+  display: none;
+}
+
+.lastUpdateTime-edit-block {
+  width: 100px;
+  display: none;
+}
+
+.editor-edit-block {
+  width: 100px;
+  display: none;
+}
+
+.control-edit-block {
+  width: 100px;
+  display: none;
+}
+
+.display-edit-block {
+  width: 150px;
+  display: none;
+}
+
+.search-edit-block {
+  width: 150px;
+  display: none;
+}
+
+/* add */
+.display-en {
+  width: 100px;
+}
+.display-ja{
+  width: 100px;
+}
+.display-zh-TW{
+  width: 100px;
+}
+.search-en {
+  width: 100px;
+}
+.search-ja{
+  width: 100px;
+}
+.search-zh-TW{
+  width: 100px;
+}
