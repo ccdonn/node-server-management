@@ -26,8 +26,10 @@ app.use('/js', pubjs);
 if (app.get('env') === 'development') {
   app.locals.pretty = true;
 }
+var port = process.env.PORT || 3005;
 
-app.listen(3005);
+app.listen(port);
+console.log('Magic Server Start, Listen on:' + port);
 
 app.get('/', function(req, res){
   res.render('index', {title:'', body:'It works!'});

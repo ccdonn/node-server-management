@@ -14,7 +14,7 @@ var knex = require('knex')({
     host: '127.0.0.1',
     // port
     user: 'root',
-    password: '',
+    password: config.sqlPass,
     database: 'z-mgr'
   }
 });
@@ -24,12 +24,20 @@ var knexData = require('knex')({
     host: '127.0.0.1',
     // port
     user: 'root',
-    password: '',
+    password: config.sqlPass,
     database: 'zipdb'
   }
 });
+var redis = require('redis'),
+    RDS_PORT = 6379,
+    RDS_HOST = '127.0.0.1',
+    RDS_PWD = config.redisPass,
+    RDS_OPTS = {auth_pass:RDS_PWD},
+    client = redis.createClient(RDS_PORT, RDS_HOST, RDS_OPTS);
 
-var superSecret = config.secret;
+client.on('ready', function(res){
+  console.info('redis ready');
+});
 
 
 apiRoutes.use(bodyParser.urlencoded({extended:false}));
@@ -42,6 +50,10 @@ apiRoutes.use(function(req, res, next) {
 });
 
 /* API route */
+apiRoutes.options('/feed/announce', function(wreq, wres) {
+  wres.sendStatus(200);
+});
+
 
 apiRoutes.get('/', function(req, res){
   res.send({time:new Date(), body:"hihihi, api"});
@@ -151,7 +163,7 @@ apiRoutes.get('/getFeedCnt', function(wreq, wres) {
 
 apiRoutes.get('/getFeed', function(wreq, wres) {
   var p = wreq.param('p', 1);
-  var ps = wreq.param('ps', 50);
+  var ps = wreq.param('ps', 10);
   var offset = ps*(p-1);
   var opt = wreq.query.opt;
 
@@ -165,8 +177,10 @@ apiRoutes.get('/getFeed', function(wreq, wres) {
 
   knexData.raw(queryString)
   .then(function(data){
-    console.info(data[0]);
-    wres.end(JSON.stringify(data[0]));
+    var resObj = {
+      data: data[0]
+    };
+    wres.send(resObj);
   }).catch(function(err){
     console.error(err.code);
     throw err;
@@ -174,5 +188,29 @@ apiRoutes.get('/getFeed', function(wreq, wres) {
 
 });
 
+apiRoutes.put('/feed/announce', function(req, res){
+
+  // console.info('announce');
+  var id = req.query.id;
+  var statusid = req.body.s;
+
+  if (id.length==36) {
+    var queryString = 'update FEED set Last_Update_Time=now(), Status_ID='+statusid+' where id="'+id+'"';
+    knexData.raw(queryString)
+      .then(function(data){
+        queryString = 'Select f.ID Id,f.Title title,f.Link link,f.Image_Link imageLink,f.Description description,UNIX_TIMESTAMP(Published_Date)*1000 as publishedDate,f.Status_ID statusId,"update" as op,fs.Name mediaName, fs.Lang lang, fs.Loc loc, fs.Duration duration from FEED f join FEED_SEED fs on f.Seed_ID=fs.ID where fs.Status_ID=1 and f.ID="'+id+'"';
+        knexData.raw(queryString)
+          .then(function(data){
+            console.info(JSON.stringify(data[0][0]));
+            client.lpush('fed-index', JSON.stringify(data[0][0]));
+          }).catch(function(err){
+            throw err;
+          });
+        }).catch(function(err){
+          throw err;
+        });
+  }
+  res.end();
+});
 
 module.exports = apiRoutes;

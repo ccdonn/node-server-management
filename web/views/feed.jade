@@ -5,13 +5,63 @@ html
     meta(content='charset=utf-8')
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js')
     script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js')
     script(src='/js/common.js')
     script(src='/js/feed.js')
+
     link(href='/css/header.css', rel='stylesheet')
+    link(href='/css/onoffswitch.css', rel='stylesheet')
   body
     div.header
       include ./header.jade
     div.container
-      div.filter
+      div.filter-section
         div.filter_text Filter
-      div.section
+        div.filter-all-block ALL
+        div.filter-show-block SHOW
+        div.filter-hide-block HIDE
+        div.filter-expire-block EXPIRE
+      div.paging-section
+        div#page-block #{page}
+        div#pagesize-block #{pagesize}
+        div.page-text-block #{startNum}, #{endNum}, #{page}, #{pagesize}
+        div.page-text-block 第 #{startNum}-#{endNum} 列 (共有 #{hit} 列)
+        if startNum==1
+          div.prepge#prepge <
+        else
+          div.prepge#prepge
+            a(href='http://localhost:3005/web/feed?p=#{parseInt(page)-1}&ps=10') <
+        if hit > endNum
+          div.nxtpge#nxtpge
+            a(href='http://localhost:3005/web/feed?p=#{parseInt(page)+1}&ps=10') >
+        else
+          div.nxtpge#nxtpge >
+      div.result-section
+        div.title-subsection
+          div.status-title-block Status
+          div.name-title-block Title
+          div.image-title-block Image
+          div.time-title-block Publish Time
+        each item in data
+          div(class="cell-subsection" id="cell-#{item.ID}")
+            div.status-block
+              if item.Status_ID==1
+                div.onoffswitch
+                  input.onoffswitch-checkbox(type='checkbox' name='onoffswitch' id='#{item.ID}-onoffswitch' fid='#{item.ID}' checked)
+                  label.onoffswitch-label(for='#{item.ID}-onoffswitch')
+                    span.onoffswitch-inner
+                    span.onoffswitch-switch
+              else if item.Status_ID==0
+                div.onoffswitch
+                  input.onoffswitch-checkbox(type='checkbox' name='onoffswitch' id='#{item.ID}-onoffswitch' fid='#{item.ID}')
+                  label.onoffswitch-label(for='#{item.ID}-onoffswitch')
+                    span.onoffswitch-inner
+                    span.onoffswitch-switch
+              else
+                | Expire
+            div.name-block
+              a(href='#{item.Link}') #{item.Title}
+            div.image-block
+              a(href='#{item.Link}')
+                img(src="#{item.Image_Link}")
+            div.time-block #{item.Published_Date}

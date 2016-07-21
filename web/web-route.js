@@ -87,19 +87,52 @@ webRoutes.get('/index', function(req, res){
 // Link to '${endpoint}/web/firstLogin
 webRoutes.get('/feed', function(req, res){
   console.info('feed page');
-  console.info(req.cookies.zmgrToken);
-  var options = {
-    url: 'http://localhost:3002/api/getFeed',
+  var p=1, ps=10;
+  if (req.query.p) {
+    p = req.query.p;
+  }
+  if (req.query.ps) {
+    ps = req.query.ps;
+  }
+  var offset = ps*(p-1);
+  var opt = req.query.opt;
+
+  var url1_opt = (opt)?'?opt>-1':'?opt='+opt;
+  var url2_opt = '?p='+p+'&ps='+ps+'&offset='+offset;
+  url2_opt += (opt)?'&opt='+opt:'';
+
+  var options1 = {
+    url: 'http://localhost:3002/api/getFeedCnt'+url1_opt,
     headers: {
-    'x-access-token': req.cookies.zmgrToken
+      'x-access-token': req.cookies.zmgrToken
     }
   };
-  request(options, function (error, response, body) {
-  if (!error && response.statusCode == 200) {
-    console.log(body);
-  }
-})
-  res.render('feed');
+
+  var hit = 0;
+  request(options1, function(error, response, body1){
+    if (!error && response.statusCode == 200) {
+      body1 = JSON.parse(body1);
+      hit = body1[0].cnt;
+      console.info(url2_opt);
+      var options2 = {
+        url: 'http://localhost:3002/api/getFeed'+url2_opt,
+        headers: {
+          'x-access-token': req.cookies.zmgrToken
+        }
+      };
+
+      request(options2, function (error, response, body2) {
+        if (!error && response.statusCode == 200) {
+          body2 = JSON.parse(body2);
+          console.info(body2);
+          res.render('feed', { hit:hit, cntr:body2.data.length, data: body2.data, page:p, pagesize: ps, startNum:(ps*(parseInt(p)-1))+1, endNum:(ps*(parseInt(p)-1))+body2.data.length });
+        }
+      });
+
+    }
+  });
+
+
 });
 
 // Link to '${endpoint}/web/firstLogin
