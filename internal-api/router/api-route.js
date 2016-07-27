@@ -554,7 +554,25 @@ apiRoutes.patch('/feed/category', function(req, res){
 
 apiRoutes.patch('/feed/category/resort', function(req, res){
   console.info('/feed/category/resort');
-  res.send();
+  var sortList = req.body.sortList;
+  var username = req.decoded.name;
+  // console.info(sortList);
+  for( var index=0; index<sortList.length; index++) {
+
+    knexData('feed_category')
+    .where('ID', sortList[index].id)
+    .update({
+      Sort: sortList[index].sort,
+      Editor: username,
+      Last_Update_Time: new Date()
+    }).then(function(result){
+    }).catch(function(err){
+      console.info(err.code);
+    });
+  }
+
+  res.status(200);
+
 });
 
 apiRoutes.post('/user/passwd', function(req, res){

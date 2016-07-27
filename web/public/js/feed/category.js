@@ -70,30 +70,24 @@ var btn_sortmode_ok = function() {
           }
           return item;
       });
-      // var sortList = objs.map(function(index){
-      // //  console.info($(objs[index]).find('.id-block').text());
-      //   var item = {
-      //     id: $(objs[index]).find('.id-block').text(),
-      //     sort: $(objs[index]).find('.sort-block').text()
-      //   };
-      //   return item;
-      // });
-
-      console.info(objs);
 
       $.ajax({
           url: 'http://localhost:3002/api/feed/category/resort',
-          data: JSON.stringify(objs),
+          data: JSON.stringify({sortList:objs}),
           method: 'PATCH',
           contentType: 'application/json',
           dataType: 'json',
           beforeSend: function(request) {
             request.setRequestHeader("x-access-token", token);
           }
-      }).then(function(result){
-
+      }).done(function(result){
+        console.info('res');
+        // console.info('loc='+$('.filter-country-subsection select option:selected').val());
+        // window.location.replace('http://localhost:3005/web/feed/FeedCategoryManagement?qloc='+$('.filter-country-subsection select option:selected').val());
+      }).fail(function(result){
+        console.info('fail');
       });
-
+/*
       $('#btn-sortmode-ok').hide();
       $('#btn-sortmode-cancel').hide();
       $('#btn-sortmode').prop('disabled', false);
@@ -103,7 +97,7 @@ var btn_sortmode_ok = function() {
       $('.filter-country-subsection select').attr('disabled', false);
       $('.filter-mtype-subsection select').attr('disabled', false);
       $('.filter-keyword-subsection input').attr('readonly', false);
-
+*/
     });
 };
 
@@ -281,8 +275,6 @@ var binding = function() {
           request.setRequestHeader("x-access-token", token);
         }
       }).then(function(result){
-        console.info(result);
-        console.info(id);
         $('#'+id).fadeOut('slow');
       });
 
