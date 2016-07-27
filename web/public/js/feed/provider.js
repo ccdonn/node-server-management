@@ -87,6 +87,6 @@ var btnSandbox_binding = function() {
   console.info('sandbox');
   $('#btn-sandbox').bind('click', function(){
     console.info('btn-sandbox click');
-    $.colorbox({iframe:true, width:"80%", height:"80%", href:"http://localhost/feed-parser.html"});
+    $.colorbox({iframe:true, width:"80%", height:"80%", href:"./addprovidersand"});
   });
 };

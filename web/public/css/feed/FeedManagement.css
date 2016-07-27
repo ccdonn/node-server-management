@@ -1,0 +1,103 @@
+/* feed.css */
+.filter-section {
+  border-style: groove;
+  margin: 10px;
+}
+.function-section {
+  border-style: groove;
+  margin: 10px;
+}
+.paging-section {
+  border-style: groove;
+  margin: 10px;
+}
+.result-section {
+  border-style: groove;
+  margin: 10px;
+}
+
+.status-title-block{
+  display: inline-block;
+  width: 100px;
+}
+
+.country-title-block{
+  display: inline-block;
+  width: 100px;
+}
+
+.lang-title-block{
+  display: inline-block;
+  width: 100px;
+}
+
+.image-title-block{
+  display: inline-block;
+  width: 200px;
+}
+
+.text-title-block{
+  display: inline-block;
+  width: 400px;
+}
+
+.time-title-block{
+  display: inline-block;
+  width: 200px;
+}
+
+.status-block{
+  display: inline-block;
+  width: 100px;
+  vertical-align: middle;
+}
+
+.country-block{
+  display: inline-block;
+  width: 100px;
+  vertical-align: middle;
+}
+
+.lang-block{
+  display: inline-block;
+  width: 100px;
+  vertical-align: middle;
+}
+
+.image-block{
+  display: inline-block;
+  width: 200px;
+  vertical-align: middle;
+}
+
+.text-block{
+  display: inline-block;
+  width: 400px;
+  vertical-align: middle;
+}
+
+.time-block{
+  display: inline-block;
+  width: 200px;
+  vertical-align: middle;
+}
+
+.page-text-block{
+  margin: 10px;
+  text-align: center;
+}
+
+.page-change-block{
+  margin: 10px;
+  text-align: center;
+}
+
+/*
+.prepge{position:relative;display:inline-block;padding:20px;margin:10px;cursor:pointer}
+.prepge:after{content:'上一頁';font-size:.8em;color:#000;display:inline-block;position:absolute;width:50px;left:-50px;top:25px}
+.prepge div{position:relative;width:0;height:0;border-top:10px solid transparent;border-bottom:10px solid transparent;border-right:10px solid #5a78aa}
+
+.nxtpge{position:relative;display:inline-block;padding:20px;margin:10px;cursor:pointer}
+.nxtpge:after{content:'下一頁';font-size:.8em;color:#000;display:inline-block;position:absolute;width:50px;left:50px;top:25px}
+.nxtpge div{position:relative;width:0;height:0;border-top:10px solid transparent;border-left:10px solid #5a78aa;border-bottom:10px solid transparent;border-right:0px solid #5a78aa}
+*/

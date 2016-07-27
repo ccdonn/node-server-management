@@ -5,11 +5,13 @@ var path = require('path');
 var fs = require('fs');
 var bodyParser = require('body-parser');
 var jwt = require('jsonwebtoken');
-var config = require('./config');
+var config = require('./../config');
 var cookieParser = require('cookie-parser');
 var request = require('request');
 
-var superSecret = config.secret;
+const superSecret = config.secret;
+const iapiHost = config.iapiHost;
+const iapiPort = config.iapiPort;
 
 webRoutes.use(cookieParser());
 /* Web route */
@@ -85,7 +87,7 @@ webRoutes.get('/index', function(req, res){
 });
 
 // Link to '${endpoint}/web/firstLogin
-webRoutes.get('/feed', function(req, res){
+webRoutes.get('/feed/FeedManagement', function(req, res){
   console.info('feed page');
   var p=1, ps=10;
   if (req.query.p) {
@@ -102,7 +104,7 @@ webRoutes.get('/feed', function(req, res){
   url2_opt += (opt)?'&opt='+opt:'';
 
   var options1 = {
-    url: 'http://localhost:3002/api/getFeedCnt'+url1_opt,
+    url: 'http://'+iapiHost+':'+iapiPort+'/api/getFeedCnt'+url1_opt,
     headers: {
       'x-access-token': req.cookies.zmgrToken
     }
@@ -113,9 +115,9 @@ webRoutes.get('/feed', function(req, res){
     if (!error && response.statusCode == 200) {
       body1 = JSON.parse(body1);
       hit = body1[0].cnt;
-      console.info(url2_opt);
+      // console.info(url2_opt);
       var options2 = {
-        url: 'http://localhost:3002/api/getFeed'+url2_opt,
+        url: 'http://'+iapiHost+':'+iapiPort+'/api/getFeed'+url2_opt,
         headers: {
           'x-access-token': req.cookies.zmgrToken
         }
@@ -125,7 +127,7 @@ webRoutes.get('/feed', function(req, res){
         if (!error && response.statusCode == 200) {
           body2 = JSON.parse(body2);
           console.info(body2);
-          res.render('feed', { hit:hit, cntr:body2.data.length, data: body2.data, page:p, pagesize: ps, startNum:(ps*(parseInt(p)-1))+1, endNum:(ps*(parseInt(p)-1))+body2.data.length });
+          res.render('feed/FeedManagement', { hit:hit, cntr:body2.data.length, data: body2.data, page:p, pagesize: ps, startNum:(ps*(parseInt(p)-1))+1, endNum:(ps*(parseInt(p)-1))+body2.data.length });
         }
       });
 
@@ -136,19 +138,19 @@ webRoutes.get('/feed', function(req, res){
 });
 
 // Link to '${endpoint}/web/firstLogin
-webRoutes.get('/feed/category', function(req, res){
+webRoutes.get('/feed/FeedCategoryManagement', function(req, res){
   console.info('feed category page');
 
   var pagesize = (req.query.ps)?req.query.ps:10;
   var page = (req.query.p)?req.query.p:1;
   var qs = (req.query.qs)?req.query.qs:'';
-  var qloc = (req.query.qloc)?req.query.qloc:'';
+  var qloc = (req.query.qloc)?req.query.qloc:'JP';
   var qk = (req.query.qk)?req.query.qk:'';
 
   var url_opt = '?p='+page+'&ps='+pagesize+'&qs='+qs+'&qloc='+qloc+'&qk='+qk;
-  console.info(url_opt);
+  // console.info(url_opt);
   var options = {
-    url: 'http://localhost:3002/api/feed/category'+url_opt,
+    url: 'http://'+iapiHost+':'+iapiPort+'/api/feed/category'+url_opt,
     headers: {
       'x-access-token': req.cookies.zmgrToken
     }
@@ -156,7 +158,7 @@ webRoutes.get('/feed/category', function(req, res){
 
   request(options, function(error, response, body){
     if (!error && response.statusCode == 200) {
-      console.info(body);
+      // console.info(body);
       body = JSON.parse(body);
       res.render('feed/category', body);
     }
@@ -165,11 +167,19 @@ webRoutes.get('/feed/category', function(req, res){
 });
 
 // Link to '${endpoint}/web/firstLogin
-webRoutes.get('/feed/provider', function(req, res){
+webRoutes.get('/feed/ContentProviderManagement', function(req, res){
   console.info('feed provider page');
 
+  var pagesize = (req.query.ps)?req.query.ps:10;
+  var page = (req.query.p)?req.query.p:1;
+  var qloc = (req.query.qloc)?req.query.qloc:'';
+  var qlang = (req.query.qlang)?req.query.qlang:'';
+  var qk = (req.query.qk)?req.query.qk:'';
+
+  url_opt = '?ps='+pagesize+'&p='+page+'&qloc='+qloc+'&qlang='+qlang+'&qk='+qk;
+  console.info(url_opt);
   var options = {
-    url: 'http://localhost:3002/api/feed/provider',
+    url: 'http://'+iapiHost+':'+iapiPort+'/api/feed/provider'+url_opt,
     headers: {
       'x-access-token': req.cookies.zmgrToken
     }
@@ -177,13 +187,24 @@ webRoutes.get('/feed/provider', function(req, res){
 
   request(options, function(error, response, body){
     if (!error && response.statusCode == 200) {
-      console.info(body);
       body = JSON.parse(body);
+      body.page = page;
+      body.pagesize = pagesize;
+      body.startNum = (pagesize*(parseInt(page)-1))+1;
+      body.endNum = (pagesize*(parseInt(page)-1))+body.cntr;
+      console.info(body);
       res.render('feed/provider', body);
+//      res.render('feed/FeedManagement', { hit:hit, cntr:body2.data.length, data: body2.data, page:p, pagesize: ps, startNum:(ps*(parseInt(p)-1))+1, endNum:(ps*(parseInt(p)-1))+body2.data.length });
     }
   });
 
 
+});
+
+// Link to '${endpoint}/web/addprovidersand
+webRoutes.get('/feed/addprovidersand', function(req, res){
+  console.info('feed addprovidersand');
+  res.render('feed/addprovidersand')
 });
 
 // Link to '${endpoint}/web/firstLogin

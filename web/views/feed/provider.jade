@@ -17,6 +17,7 @@ html
     div.header
       include ../header.jade
     div.container
+      h1 Content Provider Management
       div.filter-section
         div.filter-country-subsection Country
           include ../component/select-loc.jade
@@ -28,6 +29,18 @@ html
       div.function-section
         button#btn-sandbox Add Provider Sandbox
       div.paging-section
+        div.page-text-block 第 #{startNum}-#{endNum} 列 (共有 #{hit} 列)
+        if startNum==1
+          div.prepge#prepge <
+        else
+          div.prepge#prepge
+            a(href='http://localhost:3005/web/feed/ContentProviderManagement?p=#{parseInt(page)-1}&ps=10') <
+        if hit > endNum
+          div.nxtpge#nxtpge
+            a(href='http://localhost:3005/web/feed/ContentProviderManagement?p=#{parseInt(page)+1}&ps=10') >
+        else
+          div.nxtpge#nxtpge >
+
       div.result-section
         div.title-subsection
           div.status-title-block Status
@@ -53,7 +66,7 @@ html
                     input.onoffswitch-checkbox(type='checkbox' name='onoffswitch' id='#{item.ID}-onoffswitch' fid='#{item.ID}')
                     label.onoffswitch-label(for='#{item.ID}-onoffswitch')
                       span.onoffswitch-inner
-                      span.onoffswitch-switch #{item.status}
+                      span.onoffswitch-switch
               div.url-block #{item.url}
               div.url-edit-block
                 input(type='text')

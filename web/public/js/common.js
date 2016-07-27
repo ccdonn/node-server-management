@@ -9,13 +9,13 @@ var loginJudge = function(token) {
 var convertUTCtoLocal = function(odate) {
   var result = '';
   var ndate = new Date(odate);
-  
+
   var month = parseInt(ndate.getMonth())+1;
   var date = parseInt(ndate.getDate());
   var hour = parseInt(ndate.getHours());
   var min = parseInt(ndate.getMinutes());
   var sec = parseInt(ndate.getSeconds());
-  
+
   var result = ndate.getFullYear()
   +'-'+(month>9?month:'0'+month)
   +'-'+(date>9?date:'0'+date)
@@ -25,15 +25,6 @@ var convertUTCtoLocal = function(odate) {
   return result;
 };
 
-var naviMenu = function() {
-  // show tree 
-  // ajax ? only change container
-  return '<br/>'
-    + '<a href="/web/index">index</a><br/>'
-    + '<a href="/web/feed">Feed</a><br/>'
-    + '<a href="/web/feed">Feed</a><br/>'
-    + '<a href="/web/feed">Feed</a><br/>';
-};
 
 var newPasswordChecker = function(in1, in2) {
   if (in1==in2 && passwordChecker(in1) && passwordChecker(in2)) {

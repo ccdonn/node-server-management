@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var cors = require('express-cors');
 
-var api = require('./api-route');
+var api = require('./router/api-route');
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");

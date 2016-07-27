@@ -4,9 +4,10 @@ var cors = require('express-cors');
 var bodyParser = require('body-parser');
 var config = require('./config');
 
-var web = require('./web-route');
-var pubcss = require('./css-route');
-var pubjs = require('./js-route');
+var web = require('./router/web-route');
+var pubcss = require('./router/css-route');
+var pubjs = require('./router/js-route');
+var pubimg = require('./router/img-route')
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -22,6 +23,7 @@ app.set('view engine', 'jade');
 app.use('/web', web);
 app.use('/css', pubcss);
 app.use('/js', pubjs);
+app.use('/img', pubimg);
 
 if (app.get('env') === 'development') {
   app.locals.pretty = true;

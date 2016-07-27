@@ -1,0 +1,37 @@
+doctype html
+html
+  head
+    title provder sandbox
+    meta(content='charset=utf-8')
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js')
+    script(src='https://code.jquery.com/ui/1.11.4/jquery-ui.min.js')
+    script(src='/js/common.js')
+    script(src='/js/feed/category.js')
+
+    link(href='/css/feed/category.css', rel='stylesheet')
+    link(href='/css/onoffswitch.css', rel='stylesheet')
+
+  body
+    h2 Add new feed provider
+    div
+      div RSS input
+      textarea#inputrss(rows=10 cols=50)
+    div
+      button#btn_RssToJson Convert
+    div
+      div Json Result
+      textarea#outputjson(rows=10 cols=50 readonly)
+    div.sampleresult
+      div Sample Result
+    div.newprovider-form
+      div URL
+        input(type='text', placeholder='http://hostname/')
+      div Name
+        input(type='text', placeholder='provider name')
+      div Target Country
+        include ../component/select-loc.jade
+      div Language
+        include ../component/select-lang.jade
+      div TTL
+        input(type='number', min=0, max=90)
+      button#btn-newprovider Submit New Provider
