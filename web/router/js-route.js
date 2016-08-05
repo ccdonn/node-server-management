@@ -9,52 +9,53 @@ var fs = require('fs');
 //   res.sendFile(path.join(__dirname+'/public/js/'+filename));
 // });
 
-router.get('/common.js', function(req, res){
-  res.sendFile(path.join(__dirname+'/../public/js/common.js'));
+
+router.get('/jquery/jquery.min.js', function(req, res){
+  res.sendFile(path.join(__dirname+'/../public/js/jquery/jquery-1.12.0.min.js'));
 });
 
-router.get('/welcome.js', function(req, res){
-  res.sendFile(path.join(__dirname+'/../public/js/welcome.js'));
+router.get('/jquery/jquery.cookie.js', function(req, res){
+  res.sendFile(path.join(__dirname+'/../public/js/jquery/jquery.cookie-1.4.1.js'));
 });
 
-router.get('/login.js', function(req, res){
-  res.sendFile(path.join(__dirname+'/../public/js/login.js'));
+router.get('/jquery/jquery.colorbox-min.js', function(req, res){
+  res.sendFile(path.join(__dirname+'/../public/js/jquery/jquery.colorbox-1.6.4-min.js'));
 });
 
-router.get('/resetPass.js', function(req, res){
-  res.sendFile(path.join(__dirname+'/../public/js/resetPass.js'));
+router.get('/jquery/jquery.lazyload.min.js', function(req, res){
+  res.sendFile(path.join(__dirname+'/../public/js/jquery/jquery.lazyload-1.9.1-min.js'));
 });
 
-router.get('/forgetPass.js', function(req, res){
-  res.sendFile(path.join(__dirname+'/../public/js/forgetPass.js'));
+router.get('/jquery/jquery-ui.min.js', function(req, res){
+  res.sendFile(path.join(__dirname+'/../public/js/jquery/jquery-ui-1-11-4.min.js'));
 });
 
-router.get('/firstLogin.js', function(req, res){
-  res.sendFile(path.join(__dirname+'/../public/js/firstLogin.js'));
+router.get('/jquery/url.min.js', function(req, res){
+  res.sendFile(path.join(__dirname+'/../public/js/jquery/url.min.js'));
 });
 
-router.get('/feed/FeedManagement.js', function(req, res){
-  res.sendFile(path.join(__dirname+'/../public/js/feed/FeedManagement.js'));
+router.get('/:name', function(req, res){
+  if (req.params.name.endsWith('.js')) {
+    res.sendFile(path.join(__dirname+'/../public/js/'+req.params.name));
+  } else {
+    res.sendStatus(404);
+  }
 });
 
-router.get('/index.js', function(req, res){
-  res.sendFile(path.join(__dirname+'/../public/js/index.js'));
+router.get('/feed/:name', function(req, res){
+  if (req.params.name.endsWith('.js')) {
+    res.sendFile(path.join(__dirname+'/../public/js/feed/'+req.params.name));
+  } else {
+    res.sendStatus(404);
+  }
 });
 
-router.get('/feed/category.js', function(req, res){
-  res.sendFile(path.join(__dirname+'/../public/js/feed/category.js'));
-});
-
-router.get('/feed/provider.js', function(req, res){
-  res.sendFile(path.join(__dirname+'/../public/js/feed/provider.js'));
-});
-
-router.get('/user.js', function(req, res){
-  res.sendFile(path.join(__dirname+'/../public/js/user.js'));
-});
-
-router.get('/user/passwd.js', function(req, res){
-  res.sendFile(path.join(__dirname+'/../public/js/user/passwd.js'));
+router.get('/profile/:name', function(req, res){
+  if (req.params.name.endsWith('.js')) {
+    res.sendFile(path.join(__dirname+'/../public/js/profile/'+req.params.name));
+  } else {
+    res.sendStatus(404);
+  }
 });
 
 module.exports = router;

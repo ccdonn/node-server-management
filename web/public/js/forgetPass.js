@@ -6,7 +6,7 @@ $(document).ready(function(){
     console.info('name:'+$("#username").val());
 
     $.ajax({
-      url: 'http://10.13.138.120:3002/api/forgetPasswd',
+      url: '/api/forgetPasswd',
       method: 'POST',
       type: 'POST',
       dataType: 'json',

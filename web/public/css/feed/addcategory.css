@@ -1,0 +1,18 @@
+.input {
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.output {
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.cvtbtn {
+  margin: 10px 50px;
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+}

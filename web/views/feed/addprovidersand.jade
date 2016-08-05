@@ -3,35 +3,39 @@ html
   head
     title provder sandbox
     meta(content='charset=utf-8')
-    script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js')
-    script(src='https://code.jquery.com/ui/1.11.4/jquery-ui.min.js')
-    script(src='/js/common.js')
-    script(src='/js/feed/category.js')
+    script(src='/js/jquery/jquery.min.js')
+    script(src='/js/jquery/jquery-ui.min.js')
+    script(src='/js/jquery/jquery.cookie.js')
 
-    link(href='/css/feed/category.css', rel='stylesheet')
+    script(src='/js/common.js')
+    script(src='/js/feed/addprovidersand.js')
+
+    link(href='/css/feed/addprovidersand.css', rel='stylesheet')
     link(href='/css/onoffswitch.css', rel='stylesheet')
 
   body
-    h2 Add new feed provider
-    div
+    h2 Rss parser
+    div.input
       div RSS input
       textarea#inputrss(rows=10 cols=50)
-    div
+    div.cvtbtn
       button#btn_RssToJson Convert
-    div
+    div.output
       div Json Result
       textarea#outputjson(rows=10 cols=50 readonly)
     div.sampleresult
-      div Sample Result
     div.newprovider-form
-      div URL
+      h2 Add new content provider
+      | Attention!! Fillup following column and submit if you feel good, DO NOT submit if you think parse result is shit.
+      div#url-edit-block URL
         input(type='text', placeholder='http://hostname/')
-      div Name
+      div#name-edit-block Name
         input(type='text', placeholder='provider name')
-      div Target Country
+      div#country-edit-block Target Country
         include ../component/select-loc.jade
-      div Language
+      div#lang-edit-block Language
         include ../component/select-lang.jade
-      div TTL
+      div#ttl-edit-block TTL
         input(type='number', min=0, max=90)
       button#btn-newprovider Submit New Provider
+    div#result-block

@@ -6,11 +6,13 @@
     "cookie-parser": "^1.4.2",
     "express": "^4.13.4",
     "express-cors": "0.0.3",
+    "iconv-lite": "^0.4.13",
     "jade": "^1.11.0",
     "jsonwebtoken": "^6.2.0",
     "path": "^0.12.7",
     "pug": "^2.0.0-beta4",
     "request": "^2.73.0",
-    "serve-favicon": "^2.3.0"
+    "serve-favicon": "^2.3.0",
+    "urlencode": "^1.1.0"
   }
 }

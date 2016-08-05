@@ -1,0 +1,62 @@
+doctype html
+html
+  head
+    title add category
+    meta(content='charset=utf-8')
+    script(src='/js/jquery/jquery.min.js')
+    script(src='/js/jquery/jquery-ui.min.js')
+    script(src='/js/jquery/jquery.cookie.js')
+
+    script(src='/js/common.js')
+    script(src='/js/feed/addcategory.js')
+
+    link(href='/css/feed/addcategory.css', rel='stylesheet')
+    link(href='/css/onoffswitch.css', rel='stylesheet')
+
+  body
+    h2 Add Category
+    div.newprovider-form
+      div.country-edit-block Target Country
+        include ../component/select-loc.jade
+      div.display-edit-block DisplayValue
+        table
+          tr
+            td
+              | English
+            td
+              div.display-en
+                input(type='text', placeholder='show name')
+          tr
+            td
+              | Japanese
+            td
+              div.display-ja
+                input(type='text', placeholder='show name')
+          tr
+            td
+              | Trad. Chinese
+            td
+              div.display-zh-TW
+                input(type='text', placeholder='show name')
+      div.search-edit-block SearchValue
+        table
+          tr
+            td
+              | English
+            td
+              div.search-en
+                input(type='text', placeholder='search keyword')
+          tr
+            td
+              | Japanese
+            td
+              div.search-ja
+                input(type='text', placeholder='search keyword')
+          tr
+            td
+              | Trad. Chinese
+            td
+              div.search-zh-TW
+                input(type='text', placeholder='search keyword')
+      button#btn-newcategory Submit New Category
+    div#result-block

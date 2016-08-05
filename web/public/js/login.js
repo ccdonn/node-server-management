@@ -1,7 +1,9 @@
 var token = $.cookie('zmgrToken');
 $(document).ready(function(){
 
-  // console.info(token);
+  console.info('init');
+  console.info(token);
+  nav_binding(event, token);
 
   $('#name').bind('keypress', function(event){
     if (event.keyCode == 13) {
@@ -25,12 +27,12 @@ $(document).ready(function(){
     $("#pass").attr("disabled", true);
 
     setTimeout(function () {
-        window.location.href = '/web/welcome';
+        window.location.href = '/web/index';
     }, 2000);
 
   } else {
     $("#status").html("No Auth/Not Login");
-    $('#fgtpass').html('<a href="./forgetPass">Forget Password</a>');
+    // $('#fgtpass').html('<a href="./forgetPass">Forget Password</a>');
 
     $("#send").bind("click", function(){
       var n = $("#name").val();
@@ -39,7 +41,7 @@ $(document).ready(function(){
       // console.info("pass:"+p);
 
       $.ajax({
-        url: 'http://localhost:3002/api/auth',
+        url: '/api/auth',
         method: 'POST',
         type: 'POST',
         data: {
@@ -60,7 +62,7 @@ $(document).ready(function(){
             $('#loginResult').html('Login Success, Redirecting page...');
             $('#fgtpass').html('');
             setTimeout(function () {
-              window.location.href = '/web/welcome';
+              window.location.href = '/web/index';
             }, 2000);
           } else {
             console.error('Cookie Save fail');

@@ -12,7 +12,7 @@ $(document).ready(function(){
     console.info('new passwd:' + $("#n_pwd").val());
     console.info('re-new passed:' + $("#rn_pwd").val());
     $.ajax({
-      url: 'http://10.13.138.120:3002/fgt/resetpasswd',
+      url: '/fgt/resetpasswd',
       method: 'POST',
       type: 'POST',
       dataType: 'json',

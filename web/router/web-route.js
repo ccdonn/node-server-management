@@ -8,6 +8,7 @@ var jwt = require('jsonwebtoken');
 var config = require('./../config');
 var cookieParser = require('cookie-parser');
 var request = require('request');
+var urlencode = require('urlencode');
 
 const superSecret = config.secret;
 const iapiHost = config.iapiHost;
@@ -23,10 +24,15 @@ webRoutes.get('/resetPass', function(req, res){
 })
 
 // Link to '${endpoint}/web/login.html
+// webRoutes.get('/login', function(req, res){
+//   console.info('login page');
+//   res.render('login');
+// });
+
 webRoutes.get('/login', function(req, res){
   console.info('login page');
   res.render('login');
-});
+})
 
 // Link to '${endpoint}/web/welcome
 webRoutes.get('/welcome', function(req, res){
@@ -99,12 +105,13 @@ webRoutes.get('/feed/FeedManagement', function(req, res){
   var offset = ps*(p-1);
   var opt = req.query.opt;
 
-  var url1_opt = (opt)?'?opt>-1':'?opt='+opt;
+  var url1_opt = (opt)?'?opt='+opt:'?opt>-1';
   var url2_opt = '?p='+p+'&ps='+ps+'&offset='+offset;
   url2_opt += (opt)?'&opt='+opt:'';
 
+
   var options1 = {
-    url: 'http://'+iapiHost+':'+iapiPort+'/api/getFeedCnt'+url1_opt,
+    url: 'http://'+iapiHost+'/api/getFeedCnt'+url1_opt,
     headers: {
       'x-access-token': req.cookies.zmgrToken
     }
@@ -117,7 +124,7 @@ webRoutes.get('/feed/FeedManagement', function(req, res){
       hit = body1[0].cnt;
       // console.info(url2_opt);
       var options2 = {
-        url: 'http://'+iapiHost+':'+iapiPort+'/api/getFeed'+url2_opt,
+        url: 'http://'+iapiHost+'/api/getFeed'+url2_opt,
         headers: {
           'x-access-token': req.cookies.zmgrToken
         }
@@ -126,7 +133,7 @@ webRoutes.get('/feed/FeedManagement', function(req, res){
       request(options2, function (error, response, body2) {
         if (!error && response.statusCode == 200) {
           body2 = JSON.parse(body2);
-          console.info(body2);
+          // console.info(body2);
           res.render('feed/FeedManagement', { hit:hit, cntr:body2.data.length, data: body2.data, page:p, pagesize: ps, startNum:(ps*(parseInt(p)-1))+1, endNum:(ps*(parseInt(p)-1))+body2.data.length });
         }
       });
@@ -150,7 +157,7 @@ webRoutes.get('/feed/FeedCategoryManagement', function(req, res){
   var url_opt = '?p='+page+'&ps='+pagesize+'&qs='+qs+'&qloc='+qloc+'&qk='+qk;
   // console.info(url_opt);
   var options = {
-    url: 'http://'+iapiHost+':'+iapiPort+'/api/feed/category'+url_opt,
+    url: 'http://'+iapiHost+'/api/feed/category'+url_opt,
     headers: {
       'x-access-token': req.cookies.zmgrToken
     }
@@ -160,7 +167,7 @@ webRoutes.get('/feed/FeedCategoryManagement', function(req, res){
     if (!error && response.statusCode == 200) {
       // console.info(body);
       body = JSON.parse(body);
-      res.render('feed/category', body);
+      res.render('feed/FeedCategoryManagement', body);
     }
   });
 
@@ -172,17 +179,18 @@ webRoutes.get('/feed/ContentProviderManagement', function(req, res){
 
   var pagesize = (req.query.ps)?req.query.ps:10;
   var page = (req.query.p)?req.query.p:1;
-  var qloc = (req.query.qloc)?req.query.qloc:'';
-  var qlang = (req.query.qlang)?req.query.qlang:'';
+  var qloc = (req.query.qloc)?req.query.qloc:'JP';
+  var qlang = (req.query.qlang)?req.query.qlang:'zh-TW';
   var qk = (req.query.qk)?req.query.qk:'';
 
-  url_opt = '?ps='+pagesize+'&p='+page+'&qloc='+qloc+'&qlang='+qlang+'&qk='+qk;
-  console.info(url_opt);
+  url_opt = '?ps='+pagesize+'&p='+page+'&qloc='+qloc+'&qlang='+qlang+'&qk='+urlencode(qk, 'utf8');
+
   var options = {
-    url: 'http://'+iapiHost+':'+iapiPort+'/api/feed/provider'+url_opt,
+    url: 'http://'+iapiHost+'/api/feed/provider'+url_opt,
     headers: {
       'x-access-token': req.cookies.zmgrToken
-    }
+    },
+    encoding: null
   };
 
   request(options, function(error, response, body){
@@ -192,8 +200,8 @@ webRoutes.get('/feed/ContentProviderManagement', function(req, res){
       body.pagesize = pagesize;
       body.startNum = (pagesize*(parseInt(page)-1))+1;
       body.endNum = (pagesize*(parseInt(page)-1))+body.cntr;
-      console.info(body);
-      res.render('feed/provider', body);
+      // console.info(body);
+      res.render('feed/ContentProviderManagement', body);
 //      res.render('feed/FeedManagement', { hit:hit, cntr:body2.data.length, data: body2.data, page:p, pagesize: ps, startNum:(ps*(parseInt(p)-1))+1, endNum:(ps*(parseInt(p)-1))+body2.data.length });
     }
   });
@@ -207,16 +215,16 @@ webRoutes.get('/feed/addprovidersand', function(req, res){
   res.render('feed/addprovidersand')
 });
 
-// Link to '${endpoint}/web/firstLogin
-webRoutes.get('/user', function(req, res){
-  console.info('user page');
-  res.render('user');
+// Link to '${endpoint}/web/addprovidersand
+webRoutes.get('/feed/addcategory', function(req, res){
+  console.info('feed addcategory');
+  res.render('feed/addcategory')
 });
 
 // Link to '${endpoint}/web/firstLogin
-webRoutes.get('/user/passwd', function(req, res){
+webRoutes.get('/profile/ChangePasswd', function(req, res){
   console.info('user passwd page');
-  res.render('user/passwd');
+  res.render('profile/ChangePasswd');
 });
 
 module.exports = webRoutes;

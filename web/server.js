@@ -7,7 +7,8 @@ var config = require('./config');
 var web = require('./router/web-route');
 var pubcss = require('./router/css-route');
 var pubjs = require('./router/js-route');
-var pubimg = require('./router/img-route')
+var pubimg = require('./router/img-route');
+var pubembed = require('./router/embed-route');
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -24,6 +25,7 @@ app.use('/web', web);
 app.use('/css', pubcss);
 app.use('/js', pubjs);
 app.use('/img', pubimg);
+app.use('/embed', pubembed);
 
 if (app.get('env') === 'development') {
   app.locals.pretty = true;

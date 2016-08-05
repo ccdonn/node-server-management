@@ -1,0 +1,27 @@
+doctype html
+html
+  head
+    title Login
+    meta(content='charset=utf-8')
+    script(src='/js/jquery/jquery.min.js')
+    script(src='/js/jquery/jquery.cookie.js')
+
+    script(src='/js/common.js')
+    script(src='/js/header.js')
+    script(src='/js/login.js')
+    link(href='/css/header.css', rel='stylesheet')
+  body
+    div.header
+      include ./header.jade
+    div.container
+      h1 Login Page
+      div#status
+      p
+        | Name
+        input#name(type='text')
+      p
+        | Password
+        input#pass(type='password')
+      button#send LoginSubmit
+      div#loginResult
+      div#fgtpass

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+html(lang="en")
+	head
+		block meta
+		meta(charset="UTF-8")
+		meta(name="viewport", content="width=device-width, initial-scale=1.0")
+		link(rel="stylesheet", href="https://fonts.googleapis.com/css?family=Noto+Sans:400,700")
+		link(rel="stylesheet", href="/embed/css/normalize.css")
+		link(rel="stylesheet", href="/embed/css/reset.css")
+		link(rel="stylesheet", href="/embed/css/fa/css/fa-min.css")
+		link(rel="stylesheet", href="/css/style.css")
+		link(rel="stylesheet", href="/css/onoffswitch.css")
+		link(rel="stylesheet", href="/css/colorbox.css")
+		link(rel="stylesheet", href="/css/paging.css")
+
+
+		script(src='/js/jquery/jquery.min.js')
+		script(src='/js/jquery/jquery.cookie.js')
+		script(src='/js/jquery/jquery-ui.min.js')
+		script(src='/js/jquery/jquery.colorbox-min.js')
+		script(src='/js/jquery/jquery.lazyload.min.js')
+		script(src='/js/jquery/url.min.js')
+
+		script(src='/js/nav.js')
+		script(src='/js/common.js')
+
+		title Visimo
+	body
+		include _lorem-mixin.jade
+
+		#page
+
+			block nav
+				include ../include/_nav.jade
+			main
+				block content
+
+			block footer
+				include ../include/_footer.jade
+
+
+		block script

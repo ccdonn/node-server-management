@@ -55,3 +55,5 @@ var getUrlParameter = function getUrlParameter(sParam) {
         }
     }
 };
+
+var host = 'localhost';

@@ -1,8 +1,9 @@
 var express = require('express');
 var app = express();
 var cors = require('express-cors');
-
+var config = require('./config');
 var api = require('./router/api-route');
+var port = config.iapiPort;
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -13,7 +14,7 @@ app.use(function(req, res, next) {
 
 app.use('/api', api);
 
-app.listen(3002);
+app.listen(port);
 
 app.get('/', function(req, res){
   res.send({time:new Date(), body:'It works!'});

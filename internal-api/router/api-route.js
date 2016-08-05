@@ -8,6 +8,8 @@ var jwt = require('jsonwebtoken');
 var config = require('./../config');
 const superSecret = config.secret;
 const sqlHost = config.sqlHost;
+const sqlPort = config.sqlPort;
+const sqlUser = config.sqlUser;
 const sqlPass = config.sqlPass;
 const redisHost = config.redisHost;
 const redisPort = config.redisPort;
@@ -17,8 +19,8 @@ var knex = require('knex')({
   client: 'mysql',
   connection: {
     host: sqlHost,
-    // port
-    user: 'root',
+    port: sqlPort,
+    user: sqlUser,
     password: sqlPass,
     database: 'z-mgr'
   }
@@ -27,8 +29,8 @@ var knexData = require('knex')({
   client: 'mysql',
   connection: {
     host: sqlHost,
-    // port
-    user: 'root',
+    port: sqlPort,
+    user: sqlUser,
     password: sqlPass,
     database: 'zipdb'
   }
@@ -234,19 +236,45 @@ apiRoutes.put('/feed/announce', function(req, res){
 
 apiRoutes.get('/feed/provider', function(req, res){
   console.info('/feed/provider');
+
   var pagesize = (req.query.ps)?req.query.ps:10;
   var page = (req.query.p)?req.query.p:1;
-  var qloc = (req.query.qloc)?req.query.qloc:'';
-  var qlang = (req.query.qlang)?req.query.qlang:'';
+  var qloc = (req.query.qloc)?req.query.qloc:'JP';
+  var qlang = (req.query.qlang)?req.query.qlang:'zh-TW';
   var qk = (req.query.qk)?req.query.qk:'';
 
-  knexData.count('fs.ID as hit').from('feed_seed as fs').where('Status_ID', '>', -1)
+  knexData.count('fs.ID as hit').from('FEED_SEED as fs')
+  .where('Status_ID', '>', -1)
+  .where(function(){
+    if(qloc) {
+      this.andWhere('fs.Loc', qloc);
+    }
+    if(qlang) {
+      this.andWhere('fs.Lang', qlang);
+    }
+    if (qk) {
+      console.info('qk='+qk);
+      this.andWhere('fs.Name', 'like', '%'+qk+'%');
+    }
+  })
   .then(function(result){
     var hit = parseInt(result[0].hit);
     knexData.select('fs.ID as id', 'fs.Url as url', 'fs.Name as name', 'fs.Loc as loc', 'fs.Lang as lang',
           'fs.Status_ID as status', 'fs.Duration as ttl', 'fs.Auto_Announce as autoAnnounce')
-    .from('feed_seed as fs')
+    .from('FEED_SEED as fs')
     .where('Status_ID', '>', -1)
+    .where(function(){
+      if (qloc) {
+        this.andWhere('fs.Loc', qloc);
+      }
+      if (qlang) {
+        this.andWhere('fs.Lang', qlang);
+      }
+      if (qk) {
+        console.info('qk='+qk);
+        this.andWhere('fs.Name', 'like', '%'+qk+'%');
+      }
+    })
     .limit(pagesize)
     .offset(pagesize*(page-1))
     .then(function(result){
@@ -259,10 +287,109 @@ apiRoutes.get('/feed/provider', function(req, res){
   // res.send();
 });
 
+apiRoutes.post('/feed/provider', function(req, res){
+  console.info('/feed/proivder');
+  var provider = req.body;
+  var username = req.decoded.name;
+  console.info(req.decoded);
+  console.info(req.body);
+  /* check input */
+
+  /* insert new provider */
+  knexData('FEED_SEED')
+  .insert({
+      'Url': provider.url,
+      'Name': provider.name,
+      'Lang': provider.lang,
+      'Loc': provider.loc,
+      'Duration': provider.duration,
+      'Auto_Announce': 0,
+      'Status_ID': 0,
+      'Last_Update_Time': new Date(),
+      'Editor': username
+  }).then(function(result){
+    if (result) {
+      res.send({status: 'success', time:new Date()});
+    } else {
+      res.send({status: 'failure', time:new Date()});
+    }
+  }).catch(function(err){
+    console.info(err.code);
+    res.send({status: 'failure', time:new Date()});
+  });
+
+
+});
+
+apiRoutes.put('/feed/provider', function(req, res){
+  console.info('/feed/provider');
+  var provider = req.body;
+  var username = req.decoded.name;
+  /* check input*/
+  if (provider.id) {
+  } else {
+    res.status(400).send();
+  }
+
+  /* update db */
+  if (provider.id) {
+    knexData('FEED_SEED')
+    .where('ID', provider.id)
+    .update({
+      'Url': provider.url,
+      'Name': provider.name,
+      'Lang': provider.lang,
+      'Loc': provider.loc,
+      'Duration': provider.duration,
+      'Auto_Announce': provider.autoAnnounce,
+      'Last_Update_Time': new Date(),
+      'Editor': username
+    }).then(function(result){
+      console.info(result);
+      if (result) {
+        res.send({status: 'success', time:new Date()});
+      } else {
+        res.send({status: 'failure', time:new Date()});
+      }
+    }).catch(function(err){
+      console.info(err.code);
+      res.send({status: 'failure', time:new Date()});
+    });
+  }
+
+});
+
+apiRoutes.patch('/feed/provider', function(req, res){
+  console.info('/feed/provider');
+  var patchprovider = req.body;
+  var username = req.decoded.name;
+  /* check input */
+
+  /* update db */
+  knexData('FEED_SEED')
+  .where('ID', patchprovider.id)
+  .update({
+    'Status_ID': patchprovider.status,
+    'Last_Update_Time': new Date(),
+    'Editor': username
+  }).then(function(result){
+    if (result) {
+      res.send({status: 'success', time:new Date()});
+    } else {
+      res.send({status: 'failure', time:new Date()});
+    }
+    // return true;
+  }).catch(function(err){
+    console.info(err.code);
+    res.send({status: 'failure', time:new Date()});
+  });
+
+  // res.send();
+});
+
+
 apiRoutes.get('/feed/category', function(req, res){
   console.info('/feed/category');
-  var pagesize = (req.query.ps)?req.query.ps:10;
-  var page = (req.query.p)?req.query.p:1;
   var qs = (req.query.qs)?req.query.qs:'';
   var qloc = (req.query.qloc)?req.query.qloc:'JP';
   var qk = (req.query.qk)?req.query.qk:'';
@@ -271,14 +398,14 @@ apiRoutes.get('/feed/category', function(req, res){
   'fc.Editor as editor', 'fc.Country as loc', 'fc.Status_ID as status',
   'fce1.Value as displayValue', 'fce1.Lang as displayValueLang',
   'fce2.Value as searchValue', 'fce2.Lang as searchValueLang', 'fc.Sort as sort')
-  .from('feed_category as fc')
-  .join('feed_category_expression as fce1', function(){
+  .from('FEED_CATEGORY as fc')
+  .join('FEED_CATEGORY_EXPRESSION as fce1', function(){
     this.on(function(){
       this.on('fce1.ID', 'fc.ID');
       this.andOn('fce1.Type', 1)
     })
   })
-  .join('feed_category_expression as fce2', function(){
+  .join('FEED_CATEGORY_EXPRESSION as fce2', function(){
     this.on(function(){
       this.on('fce2.ID', 'fc.ID');
       this.andOn('fce2.Type', 2);
@@ -393,11 +520,7 @@ apiRoutes.get('/feed/category', function(req, res){
 
     resList.sort(function(a,b) {return (a.sort > b.sort) ? 1 : ((b.sort > a.sort) ? -1 : 0);})
 
-    if ((resList.length-((page-1)*pagesize))>pagesize) {
-      res.send({"time":new Date(), "cntr":pagesize, "hit":resList.length, "data":resList.slice((page-1)*pagesize, ((page-1)*pagesize)+parseInt(pagesize))});
-    } else {
-      res.send({"time":new Date(), "cntr":resList.length-((page-1)*pagesize), "hit":resList.length, "data":resList.slice((page-1)*pagesize)});
-    }
+    res.send({"time":new Date(), "cntr":resList.length, "hit":resList.length, "data":resList});
   });
 
 
@@ -406,7 +529,7 @@ apiRoutes.get('/feed/category', function(req, res){
 apiRoutes.post('/feed/category', function(req, res){
   console.info('/feed/category');
   var loc = req.body.loc;
-  var mType = req.body.mType;
+  var mType = 1;
   var displayValue = req.body.displayValue;
   var searchValue = req.body.searchValue;
 
@@ -427,7 +550,7 @@ apiRoutes.post('/feed/category', function(req, res){
   };
   newFeedCategory.push(_new_feed_category);
 
-  knexData.batchInsert('feed_category', newFeedCategory)
+  knexData.batchInsert('FEED_CATEGORY', newFeedCategory)
   .returning('id')
   .then(function(ids){
     var newFeedCategoryExpressionDisplay = [];
@@ -447,15 +570,18 @@ apiRoutes.post('/feed/category', function(req, res){
 
     // console.info(newFeedCategoryExpression);
 
-    knexData.batchInsert('feed_category_expression', newFeedCategoryExpression)
+    knexData.batchInsert('FEED_CATEGORY_EXPRESSION', newFeedCategoryExpression)
     .then(function(result){
-      return true;
+      client.expire('/feed/category', 1);
+      res.send({status: 'success', time:new Date()});
     })
     .catch(function(err){
-      return err.code;
+      res.send({status: 'failure', time:new Date()});
     });
+  }).catch(function(err){
+    res.send({status: 'failure', time:new Date()});
   });
-  res.end();
+
 });
 
 apiRoutes.put('/feed/category', function(req, res){
@@ -475,7 +601,7 @@ apiRoutes.put('/feed/category', function(req, res){
 
   if (id) {
     knexData.transaction(function(trx){
-      knexData('feed_category')
+      knexData('FEED_CATEGORY')
       .where('ID', id)
       .transacting(trx)
       .update({
@@ -485,7 +611,7 @@ apiRoutes.put('/feed/category', function(req, res){
       })
       .then(function(result) {
         Object.keys(displayValue).map(function(key){
-          knexData('feed_category_expression')
+          knexData('FEED_CATEGORY_EXPRESSION')
           .where('ID', id)
           .andWhere('Type', 1)
           .andWhere('Lang', key)
@@ -499,7 +625,7 @@ apiRoutes.put('/feed/category', function(req, res){
           });
         });
         Object.keys(searchValue).map(function(key){
-          knexData('feed_category_expression')
+          knexData('FEED_CATEGORY_EXPRESSION')
           .where('ID', id)
           .andWhere('Type', 2)
           .andWhere('Lang', key)
@@ -516,6 +642,7 @@ apiRoutes.put('/feed/category', function(req, res){
       .then(trx.commit)
       .catch(trx.rollback);
     }).then(function(resp) {
+      client.expire('/feed/category', 1);
       console.log('Transaction complete.');
     }).catch(function(err) {
       console.error(err);
@@ -530,9 +657,9 @@ apiRoutes.patch('/feed/category', function(req, res){
   var id = req.body.id;
   var status = req.body.status;
   var token = req.body.token;
-  var username = jwt.decode(token, superSecret).name;
+  var username = req.decoded.name;
 
-  knexData('feed_category')
+  knexData('FEED_CATEGORY')
   .where('ID', id)
   .update({
     'Status_ID': status,
@@ -540,6 +667,7 @@ apiRoutes.patch('/feed/category', function(req, res){
     'Editor': username
   }).then(function(result){
     if (result) {
+      client.expire('/feed/category', 1);
       res.send({status: 'success', time:new Date()});
     } else {
       res.send({status: 'failure', time:new Date()});
@@ -556,22 +684,31 @@ apiRoutes.patch('/feed/category/resort', function(req, res){
   console.info('/feed/category/resort');
   var sortList = req.body.sortList;
   var username = req.decoded.name;
-  // console.info(sortList);
-  for( var index=0; index<sortList.length; index++) {
 
-    knexData('feed_category')
-    .where('ID', sortList[index].id)
-    .update({
-      Sort: sortList[index].sort,
-      Editor: username,
-      Last_Update_Time: new Date()
-    }).then(function(result){
-    }).catch(function(err){
-      console.info(err.code);
-    });
+  try {
+    for( var index=0; index<sortList.length; index++) {
+      knexData('FEED_CATEGORY')
+        .where('ID', sortList[index].id)
+        .update({
+          Sort: sortList[index].sort,
+          Editor: username,
+          Last_Update_Time: new Date()
+        }).then(function(result){
+
+        }).catch(function(err){
+          console.info(err.code);
+          throw err;
+        });
+      // console.info('inloop');
+    }
+
+    client.expire('/feed/category', 1);
+    // console.info('end');
+    res.send({status: 'success', time:new Date()});
+
+  } catch (err) {
+    res.send({status: 'failure', time:new Date()});
   }
-
-  res.status(200);
 
 });
 

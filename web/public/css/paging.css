@@ -1,0 +1,7 @@
+.prepge{position:relative;display:inline-block;padding:20px;margin:10px;cursor:pointer}
+.prepge:after{content:'上一頁';font-size:.8em;color:#000;display:inline-block;position:absolute;width:50px;left:-50px;top:25px}
+.prepge div{position:relative;width:0;height:0;border-top:10px solid transparent;border-bottom:10px solid transparent;border-right:10px solid #5a78aa}
+
+.nxtpge{position:relative;display:inline-block;padding:20px;margin:10px;cursor:pointer}
+.nxtpge:after{content:'下一頁';font-size:.8em;color:#000;display:inline-block;position:absolute;width:50px;left:50px;top:25px}
+.nxtpge div{position:relative;width:0;height:0;border-top:10px solid transparent;border-left:10px solid #5a78aa;border-bottom:10px solid transparent;border-right:0px solid #5a78aa}
