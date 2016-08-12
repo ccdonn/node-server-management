@@ -1,7 +1,7 @@
 var token = $.cookie('zmgrToken');
 
 $(document).ready(function(){
-  header_binding();
+  // header_binding();
   btnSave_search();
   btnConvert_binding();
 });

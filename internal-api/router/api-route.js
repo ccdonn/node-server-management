@@ -219,7 +219,7 @@ apiRoutes.put('/feed/announce', function(req, res){
     var queryString = 'update FEED set Last_Update_Time=now(), Status_ID='+statusid+' where id="'+id+'"';
     knexData.raw(queryString)
       .then(function(data){
-        queryString = 'Select f.ID Id,f.Title title,f.Link link,f.Image_Link imageLink,f.Description description,UNIX_TIMESTAMP(Published_Date)*1000 as publishedDate,f.Status_ID statusId,"update" as op,fs.Name mediaName, fs.Lang lang, fs.Loc loc, fs.Duration duration from FEED f join FEED_SEED fs on f.Seed_ID=fs.ID where fs.Status_ID=1 and f.ID="'+id+'"';
+        queryString = 'Select f.ID Id,f.Title title,f.Link link,f.Image_Link imageLink,f.Description description,UNIX_TIMESTAMP(Published_Date)*1000 as publishedDate,f.Status_ID statusId,"update" as op,fs.Name mediaName, fs.Lang lang, fs.Loc loc, fs.Duration duration from FEED f join FEED_SEED fs on f.Seed_ID=fs.ID where fs.Status_ID>=0 and f.ID="'+id+'"';
         knexData.raw(queryString)
           .then(function(data){
             // console.info(JSON.stringify(data[0][0]));
